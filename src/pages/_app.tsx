@@ -6,7 +6,7 @@ import { AppProps } from "next/app";
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
+  const [isUserAuthenticated, setIsUserAuthenticated] = useState(true);
 
   useEffect(() => {
     if (isUserAuthenticated) {

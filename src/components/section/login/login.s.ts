@@ -20,6 +20,7 @@ export const FormWrapper = styled.div`
 export const Forma = styled.form`
   h2 {
     text-align: center;
+    margin-bottom: 36px;
   }
   label {
     font-size: 14px;

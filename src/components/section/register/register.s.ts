@@ -20,6 +20,7 @@ export const RegisterFormWrapper = styled.div`
 export const RegisterForma = styled.form`
   h2 {
     text-align: center;
+    margin-bottom: 36px;
   }
   label {
     font-size: 14px;
