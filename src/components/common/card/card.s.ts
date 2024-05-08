@@ -89,12 +89,4 @@ export const DeliteWrapper = styled.div`
   border-radius: 6px 6px 6px 0px;
 `;
 
-export const EditWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  background-color: #6200ee;
-  border-radius: 0px 6px 6px 6px;
-`;
+

@@ -8,7 +8,7 @@ import { setStoreData } from "@/context/state";
 interface IMain {}
 
 export const Main: FC<IMain> = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   interface StoreState {
     storeReducer: {
       data: string[];
@@ -19,15 +19,22 @@ export const Main: FC<IMain> = () => {
     (state: StoreState) => state.storeReducer
   );
 
-  console.log(getData.data)
+  
 
   const handleFunction = (arg: number) => {
-    dispatch(setStoreData(
-      getData.data.filter((el: any) => {
-        return el.id != arg;
-      })
-    ))
+    dispatch(
+      setStoreData(
+        getData.data.filter((el: any) => {
+          return el.id != arg;
+        })
+      )
+    );
   };
+
+
+  const handileUpdateFunction = (arg : number) =>{
+    
+  }
 
   return (
     <Styles.Container>

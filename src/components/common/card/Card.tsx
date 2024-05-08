@@ -1,14 +1,15 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import {
   Card,
   CardFotter,
   DeliteWrapper,
   EditDeliteWrapper,
-  EditWrapper,
+
   MainCardWrapper,
   URL,
 } from "./card.s";
 import Link from "next/link";
+import { UpdateModal } from "../updateModal";
 
 interface ICard {
   data: {
@@ -24,8 +25,18 @@ interface ICard {
 }
 
 export const MainCard: FC<ICard> = ({ data, handleFunction }) => {
+  const [id, setId] = useState<number>(0);
+  // delite function
+
   const handleClick = (e: number) => {
     handleFunction(e);
+  };
+
+  // edite function
+
+  const handleUpdate = (e: number) => {
+    setId(e);
+    
   };
 
   return (
@@ -60,9 +71,13 @@ export const MainCard: FC<ICard> = ({ data, handleFunction }) => {
         >
           <img src="/imgs/delite.svg" alt="delite icon" />
         </DeliteWrapper>
-        <EditWrapper>
-          <img src="/imgs/edit.svg" alt="delite icon" />
-        </EditWrapper>
+        <div
+          onClick={() => {
+            handleUpdate(data.id);
+          }}
+        >
+          <UpdateModal  id={id} />
+        </div>
       </EditDeliteWrapper>
     </MainCardWrapper>
   );

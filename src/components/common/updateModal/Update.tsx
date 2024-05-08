@@ -1,9 +1,15 @@
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import { BTN, ModalFooter, ModalHeader, ModalMain } from "./modal.s";
-import React, { useRef, useState } from "react";
+import React, { FC, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setStoreData } from "@/context/state";
+import {
+  BTN,
+  EditWrapper,
+  UpdateModalFooter,
+  UpdateModalHeader,
+  UpdateModalMain,
+} from "./update.s";
 
 const style = {
   position: "absolute" as "absolute",
@@ -19,7 +25,12 @@ const style = {
   pb: 3,
 };
 
-export default function NestedModal() {
+interface IUpdateModal {
+  id: number;
+}
+
+export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
+ 
   const imageRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const pagesRef = useRef<HTMLInputElement>(null);
@@ -144,7 +155,6 @@ export default function NestedModal() {
     setOpen(false);
   };
 
-
   // Function to update the state
   function handleSubmit() {
     const updatedBook = { ...createBook };
@@ -159,12 +169,15 @@ export default function NestedModal() {
     const updatedBookString = JSON.parse(JSON.stringify(updatedBook));
     const updatedData = [...getData.data, updatedBookString];
     dispatch(setStoreData(updatedData));
-    handleClose()
+    handleClose();
   }
 
   return (
     <div>
-      <BTN onClick={handleOpen}>+ Create a book</BTN>
+      <EditWrapper onClick={handleOpen}>
+        <img src="/imgs/edit.svg" alt="delite icon" />
+      </EditWrapper>
+
       <Modal
         open={open}
         onClose={handleClose}
@@ -180,7 +193,7 @@ export default function NestedModal() {
             borderRadius: "12px",
           }}
         >
-          <ModalHeader>
+          <UpdateModalHeader>
             <h4>Create a book</h4>
             <img
               onClick={handleClose}
@@ -189,8 +202,8 @@ export default function NestedModal() {
               height={24}
               alt="close icon"
             />
-          </ModalHeader>
-          <ModalMain>
+          </UpdateModalHeader>
+          <UpdateModalMain>
             <h4>book img url</h4>
             <input ref={imageRef} type="url" />
             <h4>book name</h4>
@@ -198,13 +211,13 @@ export default function NestedModal() {
 
             <h4>book pages</h4>
             <input ref={pagesRef} type="text" />
-          </ModalMain>
-          <ModalFooter>
+          </UpdateModalMain>
+          <UpdateModalFooter>
             <button onClick={handleClose}>Close</button>
             <button onClick={handleSubmit}>Submit</button>
-          </ModalFooter>
+          </UpdateModalFooter>
         </Box>
       </Modal>
     </div>
   );
-}
+};
