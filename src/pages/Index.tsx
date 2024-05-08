@@ -1,7 +1,29 @@
 import Section from "@/components/section/section";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect, useLayoutEffect } from "react";
+import { useGetPokemonByNameQuery } from "./api/getAllproduct";
+import { useDispatch } from "react-redux";
+import { setStoreData } from "@/context/state";
 
 export default function Home() {
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const { data } = useGetPokemonByNameQuery("/api/heroes");
+
+  useEffect(() => {
+    if (data) {
+      dispatch(setStoreData(data));
+    }
+  }, [data]);
+
+  useLayoutEffect(() => {
+    if (!localStorage.getItem("user")) {
+      router.push("/login");
+    }
+  }, []);
+
   return (
     <div>
       <Head>

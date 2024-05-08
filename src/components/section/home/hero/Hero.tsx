@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import { HeroWrapper, LeftItem, LeftWrapper, RightWrapper } from "./hero.s";
 import Styles from "@/styles";
-import { Button } from "@/components/common/Button/Button";
+import NestedModal from "@/components/common/Modal/Modal";
 
 interface IHero {}
 
@@ -17,12 +17,7 @@ export const Hero: FC<IHero> = ({}) => {
         <Styles.Paragrph>Your books today</Styles.Paragrph>
       </LeftWrapper>
       <RightWrapper>
-        <Button
-          title="+  Create a book"
-          padding="10px 24px"
-          color="white"
-          bacground="#6200EE"
-        />
+        <NestedModal />
       </RightWrapper>
     </HeroWrapper>
   );

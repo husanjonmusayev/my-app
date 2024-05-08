@@ -1,7 +1,7 @@
 import { Search } from "./search";
-import { Button } from "./Button/Button";
+import { MainCard } from "./card/Card";
 
 export default {
-    Search,
-    Button
-}
+  Search,
+  MainCard,
+};
