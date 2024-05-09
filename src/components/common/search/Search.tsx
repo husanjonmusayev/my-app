@@ -1,4 +1,4 @@
-import { FC, useRef, useState } from "react";
+import { FC, useState } from "react";
 import { Input, SearchWrapper } from "./search.s";
 import Image from "next/image";
 import { useGetSearchByNameQuery } from "@/pages/api/search";

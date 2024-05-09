@@ -4,7 +4,6 @@ import React, { FC, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setStoreData } from "@/context/state";
 import {
-  BTN,
   EditWrapper,
   UpdateModalFooter,
   UpdateModalHeader,
@@ -30,7 +29,6 @@ interface IUpdateModal {
 }
 
 export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
- 
   const imageRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const pagesRef = useRef<HTMLInputElement>(null);
