@@ -116,7 +116,9 @@ export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
     const updatedBook = { ...updateData[0] };
     updatedBook.name = nameRef.current?.value || "Nom berilmadi";
     updatedBook.slug = pagesRef.current?.value || "defaultSlug";
-    const updatedData = [...getData, updatedBook];
+
+
+    const updatedData = [...getData.filter((el: any) => el.id != id), updatedBook];
     dispatch(setStoreData(updatedData));
     handleClose();
   }
