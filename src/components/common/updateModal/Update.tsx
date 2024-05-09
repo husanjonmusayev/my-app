@@ -1,14 +1,17 @@
-import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setStoreData } from "@/context/state";
+import { Box, Modal } from "@mui/material";
 import {
   EditWrapper,
   UpdateModalFooter,
   UpdateModalHeader,
   UpdateModalMain,
 } from "./update.s";
+
+interface IUpdateModal {
+  id: number;
+}
 
 const style = {
   position: "absolute" as "absolute",
@@ -24,17 +27,12 @@ const style = {
   pb: 3,
 };
 
-interface IUpdateModal {
-  id: number;
-}
-
 export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
-  console.log(id)
-  const imageRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const pagesRef = useRef<HTMLInputElement>(null);
-
   const dispatch = useDispatch();
+
+  // object interface
 
   interface Superhero {
     id: number;
@@ -80,95 +78,45 @@ export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
       base: string;
     };
   }
-  // data
 
-  interface StoreState {
-    storeReducer: {
-      data: string[];
-    };
-  }
+  // get all data
 
-  const getData: { data: string[] } = useSelector(
-    (state: StoreState) => state.storeReducer
-  );
+  const getData = useSelector((state: any) => state.storeReducer.data);
+  const updateData: Superhero[] = [];
 
-  
+  // hire update
 
-  // obrazes default  book
+  useEffect(() => {
+    if (getData.length > 0) {
+      const filteredData = getData.find((el: any) => el.id === id);
+      if (filteredData) {
+        updateData.push({ ...filteredData });
+      }
+    }
+  }, [getData, id]);
 
-  let Superhero = {
-    id: 78,
-    name: "Ben 10",
-    slug: "78-ben-10",
-    powerstats: {
-      intelligence: 10,
-      strength: 7,
-      speed: 8,
-      durability: 10,
-      power: 90,
-      combat: 80,
-    },
-    appearance: {
-      eyeColor: "-",
-      gender: "Male",
-      hairColor: "-",
-      height: ["-", "0 cm"],
-      race: null,
-      weight: ["- lb", "0 kg"],
-    },
-    biography: {
-      aliases: ["Ben Ten"],
-      alignment: "good",
-      alterEgos: "No alter egos found.",
-      firstAppearance: "Ben 10 S01E01",
-      fullName: "Benjamin Kirby Tennyson",
-      placeOfBirth: "-",
-      publisher: "DC Comics",
-      connections: {
-        groupAffiliation: "-",
-        relatives: "-",
-      },
-    },
-    images: {
-      xs: "https://cdn.rawgit.com/akabab/superhero-api/0.2.0/api/images/xs/78-ben-10.jpg",
-      sm: "https://cdn.rawgit.com/akabab/superhero-api/0.2.0/api/images/sm/78-ben-10.jpg",
-      md: "https://cdn.rawgit.com/akabab/superhero-api/0.2.0/api/images/md/78-ben-10.jpg",
-      lg: "https://cdn.rawgit.com/akabab/superhero-api/0.2.0/api/images/lg/78-ben-10.jpg",
-    },
-    work: {
-      occupation: "-",
-      base: "-",
-    },
-  };
-
-  const [createBook, setCreateBook] = useState(Superhero);
   const [open, setOpen] = useState(false);
 
-  //modal open function
+  // open function
 
   const handleOpen = () => {
     setOpen(true);
   };
 
-  // modal close function
+  // close function
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  // Function to update the state
+  // concatination function
+
   function handleSubmit() {
-    const updatedBook = { ...createBook };
-    updatedBook.images.sm =
-      imageRef.current?.value ||
-      "https://media.istockphoto.com/id/1460007178/photo/library-books-on-table-and-background-for-studying-learning-and-research-in-education-school.webp?b=1&s=170667a&w=0&k=20&c=TRED57BZuROoCEP9kR85pW38PLz32onmM8106OoXeGQ=";
+    if (!updateData) return;
+    const updatedBook = { ...updateData[0] };
     updatedBook.name = nameRef.current?.value || "Nom berilmadi";
     updatedBook.slug = pagesRef.current?.value || "defaultSlug";
-
-    setCreateBook(updatedBook);
-
-    const updatedBookString = JSON.parse(JSON.stringify(updatedBook));
-    const updatedData = [...getData.data, updatedBookString];
+    const updatedData = [...getData, updatedBook];
     dispatch(setStoreData(updatedData));
     handleClose();
   }
@@ -176,9 +124,8 @@ export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
   return (
     <div>
       <EditWrapper onClick={handleOpen}>
-        <img src="/imgs/edit.svg" alt="delite icon" />
+        <img src="/imgs/edit.svg" alt="delete icon" />
       </EditWrapper>
-
       <Modal
         open={open}
         onClose={handleClose}
@@ -189,7 +136,7 @@ export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
           sx={{
             ...style,
             width: 430,
-            height: 387,
+            height: 287,
             border: "none",
             borderRadius: "12px",
           }}
@@ -205,12 +152,9 @@ export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
             />
           </UpdateModalHeader>
           <UpdateModalMain>
-            <h4>book img url</h4>
-            <input ref={imageRef} type="url" />
-            <h4>book name</h4>
+            <h4>Book name</h4>
             <input ref={nameRef} type="text" />
-
-            <h4>book pages</h4>
+            <h4>Book pages</h4>
             <input ref={pagesRef} type="text" />
           </UpdateModalMain>
           <UpdateModalFooter>

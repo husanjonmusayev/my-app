@@ -4,7 +4,6 @@ import {
   CardFotter,
   DeliteWrapper,
   EditDeliteWrapper,
-
   MainCardWrapper,
   URL,
 } from "./card.s";
@@ -34,9 +33,10 @@ export const MainCard: FC<ICard> = ({ data, handleFunction }) => {
 
   // edite function
 
+  
   const handleUpdate = (e: number) => {
     setId(e);
-    
+   
   };
 
   return (
