@@ -29,6 +29,7 @@ interface IUpdateModal {
 }
 
 export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
+  console.log(id)
   const imageRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const pagesRef = useRef<HTMLInputElement>(null);
@@ -90,6 +91,8 @@ export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
   const getData: { data: string[] } = useSelector(
     (state: StoreState) => state.storeReducer
   );
+
+  
 
   // obrazes default  book
 

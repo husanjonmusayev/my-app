@@ -1,6 +1,6 @@
 import Styles from "@/styles";
 import { FC } from "react";
-import { MainWrapper } from "./main.s";
+import { LoaderWrapper, MainWrapper } from "./main.s";
 import { MainCard } from "@/components/common/card/Card";
 import { useDispatch, useSelector } from "react-redux";
 import { setStoreData } from "@/context/state";
@@ -19,8 +19,8 @@ export const Main: FC<IMain> = () => {
     (state: StoreState) => state.storeReducer
   );
 
-  
 
+  
   const handleFunction = (arg: number) => {
     dispatch(
       setStoreData(
@@ -32,9 +32,6 @@ export const Main: FC<IMain> = () => {
   };
 
 
-  const handileUpdateFunction = (arg : number) =>{
-    
-  }
 
   return (
     <Styles.Container>
@@ -44,7 +41,25 @@ export const Main: FC<IMain> = () => {
             return <MainCard handleFunction={handleFunction} data={el} />;
           })
         ) : (
-          <h1>loading ...</h1>
+          <LoaderWrapper>
+            <div className="loader">
+              <svg viewBox="0 0 80 80">
+                <circle id="test" cx="40" cy="40" r="32"></circle>
+              </svg>
+            </div>
+
+            <div className="loader triangle">
+              <svg viewBox="0 0 86 80">
+                <polygon points="43 8 79 72 7 72"></polygon>
+              </svg>
+            </div>
+
+            <div className="loader">
+              <svg viewBox="0 0 80 80">
+                <rect x="8" y="8" width="64" height="64"></rect>
+              </svg>
+            </div>
+          </LoaderWrapper>
         )}
       </MainWrapper>
     </Styles.Container>

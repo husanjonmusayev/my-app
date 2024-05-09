@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import Styles from "@/styles";
 import Image from "next/image";
 import { Search } from "@/components/common/search";
@@ -7,6 +7,14 @@ import { LeftWrapper, NavbarWrap, RightWrapper } from "./navbar.s";
 interface INavbarProps {}
 
 export const Navbar: FC<INavbarProps> = ({}) => {
+  const [user, setUser] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (typeof storedUser === "string") {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
   return (
     <>
       <Styles.Container>
@@ -23,7 +31,7 @@ export const Navbar: FC<INavbarProps> = ({}) => {
             <Search />
           </LeftWrapper>
           <RightWrapper>
-            <Image src="/imgs/frem.svg" alt="icon" width={24} height={24} />
+            <Styles.Paragrph>{user}</Styles.Paragrph>
             <Image
               src="/imgs/userImage.svg"
               alt="icon"

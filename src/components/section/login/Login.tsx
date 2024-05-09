@@ -60,8 +60,10 @@ export const Login: FC<ILogin> = () => {
         try {
           const response = await mutate(data);
           if ("data" in response) {
-            localStorage.setItem("user", response.data);
-            console.log(response.data);
+            localStorage.setItem(
+              "user",
+              JSON.stringify(response.data.username)
+            );
             router.push("/");
             setLoading(false);
           } else {
