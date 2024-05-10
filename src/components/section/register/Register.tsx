@@ -16,21 +16,34 @@ export const Register: FC<IRegister> = () => {
   const router = useRouter();
   const [mutate, { isLoading: isRegistering }] = usePostRegister();
   const usernameRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const keyRef = useRef<HTMLInputElement>(null);
+  const secretRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState<Boolean>(false);
 
   // validate function
 
   function Validate(
     usernameRef: React.RefObject<HTMLInputElement>,
-    passwordRef: React.RefObject<HTMLInputElement>
+    emailRef: React.RefObject<HTMLInputElement>,
+    keyRef: React.RefObject<HTMLInputElement>,
+    secretRef: React.RefObject<HTMLInputElement>
   ): boolean {
     if (!usernameRef.current?.value.trim()) {
       alert("usernameingizni kiriting");
       return false;
     }
-    if (!passwordRef.current?.value.trim()) {
+    if (!emailRef.current?.value.trim()) {
       alert("emailingizni kiriting");
+      return false;
+    }
+    if (!keyRef.current?.value.trim()) {
+      alert("kiy kalitini kiriting");
+      return false;
+    }
+
+    if (!secretRef.current?.value.trim()) {
+      alert("Sirli so'zni kiriting");
       return false;
     }
 
@@ -44,21 +57,23 @@ export const Register: FC<IRegister> = () => {
     setLoading(true);
     //  validate form
 
-    if (Validate(usernameRef, passwordRef)) {
+    if (Validate(usernameRef, emailRef, keyRef, secretRef)) {
       // user interface
 
       interface UserData {
         username: string | undefined;
-        password: string | undefined;
-        user_roles: string;
+        email: string | undefined;
+        key: string | undefined | number;
+        secret: string | undefined | number;
       }
 
       // user object
 
       let data: UserData = {
         username: usernameRef.current?.value.trim(),
-        password: passwordRef.current?.value.trim(),
-        user_roles: "manager",
+        email: emailRef.current?.value.trim(),
+        key: keyRef.current?.value.trim(),
+        secret: secretRef.current?.value.trim(),
       };
 
       // user Register async function
@@ -67,7 +82,8 @@ export const Register: FC<IRegister> = () => {
         try {
           const response = await mutate(data);
           if ("data" in response) {
-            router.push("/login");
+            // router.push("/login");
+            console.log(response.data);
             setLoading(false);
           } else {
             console.error("Registration failed:", response.error);
@@ -83,7 +99,9 @@ export const Register: FC<IRegister> = () => {
     // Clear forma input
 
     usernameRef.current!.value = "";
-    passwordRef.current!.value = "";
+    emailRef.current!.value = "";
+    keyRef.current!.value = "";
+    secretRef.current!.value = "";
   }
 
   return (
@@ -102,13 +120,33 @@ export const Register: FC<IRegister> = () => {
           />
           <br />
           <br />
-          <label htmlFor="fname">Password</label>
+          <label htmlFor="fname">Email</label>
           <br />
           <input
-            ref={passwordRef}
-            type="password"
+            ref={emailRef}
+            type="email"
             id="fname"
-            placeholder="********"
+            placeholder="Emailingizni kiritigng"
+          />
+          <br />
+          <br />
+          <label htmlFor="fname">Key</label>
+          <br />
+          <input
+            ref={keyRef}
+            type="text"
+            id="fname"
+            placeholder="Kalitingizni kiritigng"
+          />
+          <br />
+          <br />
+          <label htmlFor="fname">Secret</label>
+          <br />
+          <input
+            ref={secretRef}
+            type="text"
+            id="fname"
+            placeholder="Maxfiy so'zni kiritigng"
           />
           <br />
           <br />

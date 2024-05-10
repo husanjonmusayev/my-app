@@ -2,15 +2,15 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const registerCall = createApi({
   reducerPath: "registerCall",
-  baseQuery: fetchBaseQuery({ baseUrl: "https://custom.uz/users" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "https://no23.lavina.tech" }),
   endpoints: (builder) => ({
     postRegister: builder.mutation({
-        query: (body) => ({
-          url: '/register/',
-          method: 'POST', 
-          body, 
-        }),
+      query: (body) => ({
+        url: "/signup",
+        method: "POST",
+        body,
       }),
+    }),
   }),
 });
 

@@ -2,29 +2,31 @@ import Styles from "@/styles";
 import { FC, useRef, useState } from "react";
 import { Forma, FormFooter, FormWrapper, LoginWrapper } from "./login.s";
 import Link from "next/link";
-import { usePostLogin } from "@/pages/api/login";
 import { useRouter } from "next/router";
+import { useLoginMutation } from "@/pages/api/login";
 
 interface ILogin {}
 
 export const Login: FC<ILogin> = () => {
   const router = useRouter();
-  const usernameRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const keyRef = useRef<HTMLInputElement>(null);
+  const secretRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState<Boolean>(false);
-  const [mutate, { isLoading: isRegistering }] = usePostLogin();
+  const [login, { isLoading, error, data }] = useLoginMutation();
+
+  const crypto = require("crypto");
 
   // validate function
 
   function Validate(
-    usernameRef: React.RefObject<HTMLInputElement>,
-    passwordRef: React.RefObject<HTMLInputElement>
+    keyRef: React.RefObject<HTMLInputElement>,
+    secretRef: React.RefObject<HTMLInputElement>
   ): boolean {
-    if (!usernameRef.current?.value.trim()) {
+    if (!keyRef.current?.value.trim()) {
       alert("usernameingizni kiriting");
       return false;
     }
-    if (!passwordRef.current?.value.trim()) {
+    if (!secretRef.current?.value.trim()) {
       alert("emailingizni kiriting");
       return false;
     }
@@ -32,80 +34,80 @@ export const Login: FC<ILogin> = () => {
     return true;
   }
 
-  // Login function
+  // api call
 
-  function hendalSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    //  validate form
 
-    if (Validate(usernameRef, passwordRef)) {
-      // user interface
+    // Validation function
 
-      interface UserData {
-        username: string | undefined;
-        password: string | undefined;
-      }
-
-      // user object
-
-      let data: UserData = {
-        username: usernameRef.current?.value.trim(),
-        password: passwordRef.current?.value.trim(),
-      };
-
-      // user Register async function
-
-      const handleLogin = async (data: UserData) => {
-        try {
-          const response = await mutate(data);
-          if ("data" in response) {
-            localStorage.setItem(
-              "user",
-              JSON.stringify(response.data.username)
-            );
-            router.push("/");
-            setLoading(false);
-          } else {
-            console.error("Registration failed:", response.error);
-          }
-        } catch (error) {
-          alert("An error occurred during registration");
-        }
-      };
-
-      handleLogin(data);
+    if (!Validate(keyRef, secretRef)) {
+      return;
     }
 
-    // Clear forma input
+    // button loading
 
-    usernameRef.current!.value = "";
-    passwordRef.current!.value = "";
-  }
+    setLoading(true);
+
+    //  cripto js run
+
+    function generateMD5Sign(method: string, url: string, userSecret: string) {
+      const inputString = method + url + userSecret;
+      return crypto.createHash("md5").update(inputString).digest("hex");
+    }
+    const method = "GET";
+    const url = "/myself";
+    const userSecret = secretRef.current?.value;
+
+    const md5Sign = generateMD5Sign(method, url, userSecret as string);
+
+    //  tray
+
+    try {
+      const response = await login({
+        key: keyRef.current?.value,
+        sign: md5Sign,
+      });
+      if ("data" in response) {
+        localStorage.setItem("user", JSON.stringify(response.data.data.name));
+        router.push("/");
+      } else {
+        if (response.error) {
+          alert("foydalanuvchi mavjud emas");
+        }
+      }
+    } catch (error) {
+      console.log(78, error);
+    } finally {
+      setLoading(false);
+    }
+    if (keyRef.current) keyRef.current.value = "";
+    if (secretRef.current) secretRef.current.value = "";
+  };
 
   return (
     <LoginWrapper>
       <FormWrapper>
-        <Forma onSubmit={hendalSubmit}>
+        <Forma onSubmit={handleLogin}>
           <Styles.ParagrphH2>Sign in</Styles.ParagrphH2>
-          <label htmlFor="fname">Username</label>
+          <label htmlFor="fname">Kiy</label>
           <br />
           <input
             type="text"
-            ref={usernameRef}
+            ref={keyRef}
             id="fname"
             name="fname"
-            placeholder="john doe"
+            placeholder="kalit so'zni kiriting"
           />
           <br />
           <br />
-          <label htmlFor="lname">Password</label>
+          <label htmlFor="lname">Secret</label>
           <br />
           <input
-            ref={passwordRef}
-            type="password"
+            ref={secretRef}
+            type="text"
             id="fname"
-            placeholder="********"
+            placeholder="maxfiy so'zni kiriting"
           />
           <br />
           <button>{loading ? "Loading..." : "Button"}</button>

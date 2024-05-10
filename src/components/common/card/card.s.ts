@@ -9,6 +9,7 @@ export const EditDeliteWrapper = styled.div`
   transition: all 0.5s;
   cursor: pointer;
 
+
   &:hover {
     display: flex;
   }
@@ -28,12 +29,12 @@ export const Card = styled.div`
   padding: 32px;
   cursor: pointer;
 
-  && img{
+  && img {
     width: 100%;
     height: 240px;
     object-fit: cover;
     object-position: center;
-     border-radius:10px
+    border-radius: 10px;
   }
 
   && p {
@@ -88,5 +89,3 @@ export const DeliteWrapper = styled.div`
   background-color: #ff4d4f;
   border-radius: 6px 6px 6px 0px;
 `;
-
-

@@ -1,17 +1,22 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const loginCall = createApi({
-  reducerPath: "loginCall",
-  baseQuery: fetchBaseQuery({ baseUrl: "https://custom.uz/users" }),
+const baseUrl = "https://no23.lavina.tech";
+
+export const loginApi = createApi({
+  reducerPath: "loginApi",
+  baseQuery: fetchBaseQuery({ baseUrl }),
   endpoints: (builder) => ({
-    postRegister: builder.mutation({
-        query: (body) => ({
-          url: '/login/',
-          method: 'POST', 
-          body, 
-        }),
+    login: builder.mutation({
+      query: ({ key, sign }) => ({
+        url: "/myself",
+        method: "GET",
+        headers: {
+          Key: key,
+          Sign: sign,
+        },
       }),
+    }),
   }),
 });
 
-export const usePostLogin = loginCall.endpoints.postRegister.useMutation;
+export const { useLoginMutation } = loginApi;
