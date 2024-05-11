@@ -23,13 +23,15 @@ export default function Home() {
   const getAllBook = async (user: Superhero | null) => {
     //  cripto js run
 
+    console.log(user);
+
     function generateMD5Sign(method: string, url: string, userSecret: string) {
       const inputString = method + url + userSecret;
       return crypto.createHash("md5").update(inputString).digest("hex");
     }
     const method = "GET";
     const url = "/books";
-    const userSecret = "Kevin";
+    const userSecret = "AdimJhons";
 
     const md5Sign = generateMD5Sign(method, url, userSecret as string);
 
@@ -37,7 +39,7 @@ export default function Home() {
 
     try {
       const response = await getAllProduct({
-        key: "Kevin",
+        key: "Adims",
         sign: md5Sign,
       });
       if ("data" in response) {
