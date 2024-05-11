@@ -1,7 +1,7 @@
 import Section from "@/components/section/section";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useGetAllProductMutation } from "./api/getAllproduct";
 import { useDispatch } from "react-redux";
 import { setStoreData } from "@/context/state";
@@ -12,8 +12,15 @@ export default function Home() {
   const crypto = require("crypto");
   const [getAllProduct, { isLoading, error, data }] =
     useGetAllProductMutation();
+  interface Superhero {
+    name: string;
+    secret: string;
+    key: string;
+  }
 
-  const handleLogin = async () => {
+  const [user, setUser] = useState<Superhero | null>(null);
+
+  const getAllBook = async (user: Superhero | null) => {
     //  cripto js run
 
     function generateMD5Sign(method: string, url: string, userSecret: string) {
@@ -22,7 +29,7 @@ export default function Home() {
     }
     const method = "GET";
     const url = "/books";
-    const userSecret = "okenVor";
+    const userSecret = "Kevin";
 
     const md5Sign = generateMD5Sign(method, url, userSecret as string);
 
@@ -30,10 +37,11 @@ export default function Home() {
 
     try {
       const response = await getAllProduct({
-        key: "vorzakonKelvin",
+        key: "Kevin",
         sign: md5Sign,
       });
       if ("data" in response) {
+        console.log(44, response.data)
         dispatch(setStoreData(response.data.data));
       } else {
         if (response.error) {
@@ -47,7 +55,27 @@ export default function Home() {
   };
 
   useEffect(() => {
-    handleLogin();
+    function getCookie(key: string) {
+      const name = key + "=";
+      const decodedCookie = decodeURIComponent(document.cookie);
+      const cookieArr = decodedCookie.split(";");
+      for (let i = 0; i < cookieArr.length; i++) {
+        let cookie = cookieArr[i];
+        while (cookie.charAt(0) == " ") {
+          cookie = cookie.substring(1);
+        }
+        if (cookie.indexOf(name) == 0) {
+          return JSON.parse(cookie.substring(name.length, cookie.length));
+        }
+      }
+      return null;
+    }
+    if (getCookie("user")) {
+      setUser(getCookie("user"));
+    } else {
+      router.push("/login");
+    }
+    getAllBook(user);
   }, []);
 
   return (

@@ -5,6 +5,7 @@ import { getAllProduct } from "./getAllproduct.ts";
 import { searchApi } from "./search.ts";
 import { deleteApi } from "./deliteBook.ts"; 
 import { senBook } from "./sendBook.ts";
+import { updateBook } from "./update.ts";
 import storeReducer from "../../context/state.ts";
 
 export const store = configureStore({
@@ -15,6 +16,7 @@ export const store = configureStore({
     [senBook.reducerPath]: senBook.reducer,
     [deleteApi.reducerPath]: deleteApi.reducer,
     [searchApi.reducerPath]: searchApi.reducer,
+    [updateBook.reducerPath]: updateBook.reducer,
     storeReducer: storeReducer,
   },
   middleware: (getDefaultMiddleware) => {
@@ -24,6 +26,7 @@ export const store = configureStore({
       registerCall.middleware,
       senBook.middleware,
       searchApi.middleware,
+      updateBook.middleware,
       deleteApi.middleware,
       getAllProduct.middleware
     );

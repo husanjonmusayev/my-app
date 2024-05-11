@@ -1,6 +1,4 @@
 import React, { FC, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setStoreData } from "@/context/state";
 import { Box, Modal } from "@mui/material";
 import {
   EditWrapper,
@@ -8,6 +6,7 @@ import {
   UpdateModalHeader,
   UpdateModalMain,
 } from "./update.s";
+import { useUpdateBookMutation } from "@/pages/api/update";
 
 interface IUpdateModal {
   id: number;
@@ -28,21 +27,89 @@ const style = {
 };
 
 export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
+  const [update, { isLoading, error, data }] = useUpdateBookMutation();
   const nameRef = useRef<HTMLInputElement>(null);
-  const dispatch = useDispatch();
 
-  // object interface
+  interface Superhero {
+    name: string;
+    secret: string;
+    key: string;
+  }
 
-  
+  const [user, setUser] = useState<Superhero | null>(null);
 
-  // get all data
-
-  const getData = useSelector((state: any) => state.storeReducer.data);
- 
+  useEffect(() => {
+    function getCookie(key: string) {
+      const name = key + "=";
+      const decodedCookie = decodeURIComponent(document.cookie);
+      const cookieArr = decodedCookie.split(";");
+      for (let i = 0; i < cookieArr.length; i++) {
+        let cookie = cookieArr[i];
+        while (cookie.charAt(0) == " ") {
+          cookie = cookie.substring(1);
+        }
+        if (cookie.indexOf(name) == 0) {
+          return JSON.parse(cookie.substring(name.length, cookie.length));
+        }
+      }
+      return null;
+    }
+    setUser(getCookie("user"));
+  }, []);
 
   // hire update
 
- 
+  const updateBook = async () => {
+    //  cripto js run
+
+    const crypto = require("crypto");
+
+    function generateMD5Sign(
+      method: string,
+      url: string,
+      body: any,
+      userSecret: string
+    ) {
+      const inputString = method + url + body + userSecret;
+      const hash = crypto.createHash("md5").update(inputString).digest("hex");
+      return hash;
+    }
+    const method = "PATCH";
+    const url = `/books/:id ${id}`;
+    const body = { status: nameRef.current?.value };
+    const userSecret = user?.secret;
+
+    const md5Sign = generateMD5Sign(
+      method,
+      url as string,
+      body,
+      userSecret as string
+    );
+
+    let updateBook = { status: nameRef.current?.value };
+
+    //  tray
+
+    try {
+      const response = await update({
+        body: updateBook,
+        url: id,
+        key: user?.key,
+        sign: md5Sign,
+      });
+
+      if ("data" in response) {
+        console.log(85, response.data);
+      } else {
+        if (response.error) {
+          console.log(78, error);
+        }
+      }
+    } catch (error) {
+      console.log(92, error);
+    } finally {
+    }
+  };
 
   const [open, setOpen] = useState(false);
 
@@ -61,7 +128,7 @@ export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
   // concatination function
 
   function handleSubmit() {
-   
+    updateBook();
     handleClose();
   }
 

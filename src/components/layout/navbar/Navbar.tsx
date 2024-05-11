@@ -7,7 +7,6 @@ import { LeftWrapper, NavbarWrap, RightWrapper } from "./navbar.s";
 interface INavbarProps {}
 
 export const Navbar: FC<INavbarProps> = ({}) => {
-
   interface Superhero {
     name: string;
   }

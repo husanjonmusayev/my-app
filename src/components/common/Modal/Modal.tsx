@@ -85,6 +85,7 @@ export default function NestedModal() {
       });
 
       if ("data" in response) {
+        console.log(response.data.data)
         alert("maxsulot qo'shildi");
       } else {
         if (response.error) {

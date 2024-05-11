@@ -89,8 +89,6 @@ export const Main: FC<IMain> = () => {
     }
   };
 
-  
-
   const handleFunction = (arg: number) => {
     deliteBook(arg);
     dispatch(
@@ -102,10 +100,12 @@ export const Main: FC<IMain> = () => {
     );
   };
 
+  console.log(getData.data)
+
   return (
     <Styles.Container>
       <MainWrapper>
-        {getData.data.length ? (
+        {getData.data ? (
           getData.data.map((el: any) => {
             return <MainCard handleFunction={handleFunction} data={el} />;
           })
