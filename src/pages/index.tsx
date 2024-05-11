@@ -13,9 +13,12 @@ export default function Home() {
   const [getAllProduct, { isLoading, error, data }] =
     useGetAllProductMutation();
 
-  const userData = JSON.parse(localStorage.getItem("user"));
+  const userDataString =
+    typeof window !== "undefined" ? localStorage.getItem("user") : null;
+  const userData = userDataString ? JSON.parse(userDataString) : null;
 
   const getAllBook = async (userData: any) => {
+    console.log(userData);
     //  cripto js run
 
     function generateMD5Sign(method: string, url: string, userSecret: string) {
