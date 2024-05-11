@@ -12,19 +12,10 @@ export default function Home() {
   const crypto = require("crypto");
   const [getAllProduct, { isLoading, error, data }] =
     useGetAllProductMutation();
-  interface Superhero {
-    name: string;
-    secret: string;
-    key: string;
-  }
 
-  const [user, setUser] = useState<Superhero | null>(
-    JSON.parse(localStorage.getItem("user")?.toString()) // Optional chaining and toString()
-  );
+  const userData = JSON.parse(localStorage.getItem("user"));
 
-  console.log(user);
-
-  const getAllBook = async (user: Superhero | null) => {
+  const getAllBook = async (userData: any) => {
     //  cripto js run
 
     function generateMD5Sign(method: string, url: string, userSecret: string) {
@@ -33,7 +24,7 @@ export default function Home() {
     }
     const method = "GET";
     const url = "/books";
-    const userSecret = user?.secret;
+    const userSecret = userData?.secret;
 
     const md5Sign = generateMD5Sign(method, url, userSecret as string);
 
@@ -41,7 +32,7 @@ export default function Home() {
 
     try {
       const response = await getAllProduct({
-        key: user?.key,
+        key: userData?.key,
         sign: md5Sign,
       });
       if ("data" in response) {
@@ -59,10 +50,10 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (user) {
+    if (!userData) {
       router.push("/login");
-
-      getAllBook(user);
+    } else {
+      getAllBook(userData);
     }
   }, []);
 
