@@ -18,11 +18,14 @@ export default function Home() {
     key: string;
   }
 
-  const [user, setUser] = useState<Superhero | null>(null);
+  const [user, setUser] = useState<Superhero | null>(
+    JSON.parse(localStorage.getItem("user")?.toString()) // Optional chaining and toString()
+  );
+
+  console.log(user);
 
   const getAllBook = async (user: Superhero | null) => {
     //  cripto js run
-
 
     function generateMD5Sign(method: string, url: string, userSecret: string) {
       const inputString = method + url + userSecret;
@@ -30,7 +33,7 @@ export default function Home() {
     }
     const method = "GET";
     const url = "/books";
-    const userSecret = "AdimJhons";
+    const userSecret = user?.secret;
 
     const md5Sign = generateMD5Sign(method, url, userSecret as string);
 
@@ -38,7 +41,7 @@ export default function Home() {
 
     try {
       const response = await getAllProduct({
-        key: "Adims",
+        key: user?.key,
         sign: md5Sign,
       });
       if ("data" in response) {
@@ -56,27 +59,11 @@ export default function Home() {
   };
 
   useEffect(() => {
-    function getCookie(key: string) {
-      const name = key + "=";
-      const decodedCookie = decodeURIComponent(document.cookie);
-      const cookieArr = decodedCookie.split(";");
-      for (let i = 0; i < cookieArr.length; i++) {
-        let cookie = cookieArr[i];
-        while (cookie.charAt(0) == " ") {
-          cookie = cookie.substring(1);
-        }
-        if (cookie.indexOf(name) == 0) {
-          return JSON.parse(cookie.substring(name.length, cookie.length));
-        }
-      }
-      return null;
-    }
-    if (getCookie("user")) {
-      setUser(getCookie("user"));
-    } else {
+    if (user) {
       router.push("/login");
+
+      getAllBook(user);
     }
-    getAllBook(user);
   }, []);
 
   return (

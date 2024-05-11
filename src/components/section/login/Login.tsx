@@ -79,6 +79,7 @@ export const Login: FC<ILogin> = () => {
       });
       if ("data" in response) {
         setCookie("user", response.data.data, 1);
+        localStorage.setItem("user", JSON.stringify(response.data.data));
         router.push("/");
       } else {
         if (response.error) {
