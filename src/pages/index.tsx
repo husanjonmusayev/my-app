@@ -41,7 +41,7 @@ export default function Home() {
         sign: md5Sign,
       });
       if ("data" in response) {
-        console.log(44, response.data)
+        console.log(44, response.data);
         dispatch(setStoreData(response.data.data));
       } else {
         if (response.error) {
