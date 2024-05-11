@@ -60,7 +60,7 @@ export const Search: FC<ISearch> = ({}) => {
       const hash = crypto.createHash("md5").update(inputString).digest("hex");
       return hash;
     }
-    const method = "POST";
+    const method = "GET";
     const url = `/books/${searchTerm}`;
     const userSecret = user?.secret;
 
@@ -76,7 +76,9 @@ export const Search: FC<ISearch> = ({}) => {
       });
 
       if ("data" in response) {
-        console.log(85, response.data);
+        if (!response.data.data.legth) {
+          alert("bunday kitob mavjud emas");
+        }
       } else {
         if (response.error) {
           console.log(78, error);

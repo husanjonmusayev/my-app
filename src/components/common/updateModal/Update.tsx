@@ -99,10 +99,11 @@ export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
       });
 
       if ("data" in response) {
-        console.log(85, response.data);
+        alert("malumot o'zgartirildi")
+
       } else {
         if (response.error) {
-          console.log(78, error);
+         alert("nimadur xato ketdi")
         }
       }
     } catch (error) {
@@ -164,7 +165,7 @@ export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
           </UpdateModalHeader>
           <UpdateModalMain>
             <h4>Edit Status</h4>
-            <input ref={nameRef} type="text" />
+            <input ref={nameRef} placeholder="birdan uchgacha bo'lgan son kiriting" maxLength={parseInt("1")} type="text" />
           </UpdateModalMain>
           <UpdateModalFooter>
             <button onClick={handleClose}>Close</button>

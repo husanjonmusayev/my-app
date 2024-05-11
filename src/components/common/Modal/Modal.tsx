@@ -85,7 +85,7 @@ export default function NestedModal() {
       });
 
       if ("data" in response) {
-        console.log(response.data.data)
+        console.log(response.data.data);
         alert("maxsulot qo'shildi");
       } else {
         if (response.error) {
@@ -206,9 +206,9 @@ export default function NestedModal() {
           </ModalHeader>
           <ModalMain>
             <h4>ISBN</h4>
-            <input ref={isbnRef} type="url" />
+            <input ref={isbnRef} maxLength={parseInt("20")} type="text" />
           </ModalMain>
-          <ModalFooter>
+          <ModalFooter> 
             <button onClick={handleClose}>Close</button>
             <button onClick={handleSubmit}>Submit</button>
           </ModalFooter>
