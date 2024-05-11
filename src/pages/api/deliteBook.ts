@@ -2,14 +2,14 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseUrl = "https://no23.lavina.tech";
 
-export const searchApi = createApi({
-  reducerPath: "searchApi",
+export const deleteApi = createApi({
+  reducerPath: "deleteApi",
   baseQuery: fetchBaseQuery({ baseUrl }),
   endpoints: (builder) => ({
-    searchApiRequest: builder.mutation({
+    deleteBook: builder.mutation({
       query: ({ url, key, sign }) => ({
         url: `/books/${url}`,
-        method: "GET",
+        method: "DELETE",
         headers: {
           Key: key,
           Sign: sign,
@@ -19,4 +19,4 @@ export const searchApi = createApi({
   }),
 });
 
-export const { useSearchApiRequestMutation } = searchApi;
+export const { useDeleteBookMutation } = deleteApi;

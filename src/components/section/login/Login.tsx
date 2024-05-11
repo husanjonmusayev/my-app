@@ -14,6 +14,15 @@ export const Login: FC<ILogin> = () => {
   const [loading, setLoading] = useState<Boolean>(false);
   const [login, { isLoading, error, data }] = useLoginMutation();
 
+  // save as cookie
+  function setCookie(key: string, value: any, expires: number) {
+    const date = new Date();
+    date.setTime(date.getTime() + expires * 24 * 60 * 60 * 1000);
+    const expiresStr = "expires=" + date.toUTCString();
+    document.cookie =
+      key + "=" + JSON.stringify(value) + ";" + expiresStr + ";path=/";
+  }
+
   const crypto = require("crypto");
 
   // validate function
@@ -69,11 +78,11 @@ export const Login: FC<ILogin> = () => {
         sign: md5Sign,
       });
       if ("data" in response) {
-        localStorage.setItem("user", JSON.stringify(response.data.data.name));
+        setCookie("user", response.data.data, 1);
         router.push("/");
       } else {
         if (response.error) {
-          alert("foydalanuvchi mavjud emas");
+          console.log(response.error);
         }
       }
     } catch (error) {

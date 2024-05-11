@@ -1,23 +1,22 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-export const pokemonApi = createApi({
-  reducerPath: "pokemonApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://superhero-search.p.rapidapi.com",
-  }),
+const baseUrl = "https://no23.lavina.tech";
+
+export const getAllProduct = createApi({
+  reducerPath: "getAllProduct",
+  baseQuery: fetchBaseQuery({ baseUrl }),
   endpoints: (builder) => ({
-    getPokemonByName: builder.query({
-      query: (name) => ({
-        url: `${name}`,
+    getAllProduct: builder.mutation({
+      query: ({ key, sign }) => ({
+        url: "/books",
         method: "GET",
         headers: {
-          "X-RapidAPI-Key":
-            "ae845e06f3msh69b7ccb2e4c8d4ap18cdc1jsn2b14c97e1b9b",
-          "X-RapidAPI-Host": "superhero-search.p.rapidapi.com",
+          Key: key,
+          Sign: sign,
         },
       }),
     }),
   }),
 });
 
-export const { useGetPokemonByNameQuery } = pokemonApi;
+export const { useGetAllProductMutation } = getAllProduct;

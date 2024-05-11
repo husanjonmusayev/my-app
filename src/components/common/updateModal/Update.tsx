@@ -29,71 +29,20 @@ const style = {
 
 export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
   const nameRef = useRef<HTMLInputElement>(null);
-  const pagesRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
 
   // object interface
 
-  interface Superhero {
-    id: number;
-    name: string;
-    slug: string;
-    powerstats: {
-      intelligence: number;
-      strength: number;
-      speed: number;
-      durability: number;
-      power: number;
-      combat: number;
-    };
-    appearance: {
-      eyeColor: string;
-      gender: string;
-      hairColor: string;
-      height: [string, string];
-      race: string | null;
-      weight: [string, string];
-    };
-    biography: {
-      aliases: string[];
-      alignment: string;
-      alterEgos: string;
-      firstAppearance: string;
-      fullName: string;
-      placeOfBirth: string;
-      publisher: string;
-      connections: {
-        groupAffiliation: string;
-        relatives: string;
-      };
-    };
-    images: {
-      xs: string;
-      sm: string;
-      md: string;
-      lg: string;
-    };
-    work: {
-      occupation: string;
-      base: string;
-    };
-  }
+  
 
   // get all data
 
   const getData = useSelector((state: any) => state.storeReducer.data);
-  const updateData: Superhero[] = [];
+ 
 
   // hire update
 
-  useEffect(() => {
-    if (getData.length > 0) {
-      const filteredData = getData.find((el: any) => el.id === id);
-      if (filteredData) {
-        updateData.push({ ...filteredData });
-      }
-    }
-  }, [getData, id]);
+ 
 
   const [open, setOpen] = useState(false);
 
@@ -112,14 +61,7 @@ export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
   // concatination function
 
   function handleSubmit() {
-    if (!updateData) return;
-    const updatedBook = { ...updateData[0] };
-    updatedBook.name = nameRef.current?.value || "Nom berilmadi";
-    updatedBook.slug = pagesRef.current?.value || "defaultSlug";
-
-
-    const updatedData = [...getData.filter((el: any) => el.id != id), updatedBook];
-    dispatch(setStoreData(updatedData));
+   
     handleClose();
   }
 
@@ -154,10 +96,8 @@ export const UpdateModal: FC<IUpdateModal> = ({ id }) => {
             />
           </UpdateModalHeader>
           <UpdateModalMain>
-            <h4>Book name</h4>
+            <h4>Edit Status</h4>
             <input ref={nameRef} type="text" />
-            <h4>Book pages</h4>
-            <input ref={pagesRef} type="text" />
           </UpdateModalMain>
           <UpdateModalFooter>
             <button onClick={handleClose}>Close</button>

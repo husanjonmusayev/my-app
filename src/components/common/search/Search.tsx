@@ -1,14 +1,42 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Input, SearchWrapper } from "./search.s";
 import Image from "next/image";
-import { useGetSearchByNameQuery } from "@/pages/api/search";
 import { useDispatch, useSelector } from "react-redux";
 import { setStoreData } from "@/context/state";
+import { useSearchApiRequestMutation } from "@/pages/api/search";
 
 interface ISearch {}
 
 export const Search: FC<ISearch> = ({}) => {
+  const [search, { isLoading, error, data }] = useSearchApiRequestMutation();
   const dispatch = useDispatch();
+
+  interface Superhero {
+    name: string;
+    secret: string;
+    key: string;
+  }
+
+  const [user, setUser] = useState<Superhero | null>(null);
+
+  useEffect(() => {
+    function getCookie(key: string) {
+      const name = key + "=";
+      const decodedCookie = decodeURIComponent(document.cookie);
+      const cookieArr = decodedCookie.split(";");
+      for (let i = 0; i < cookieArr.length; i++) {
+        let cookie = cookieArr[i];
+        while (cookie.charAt(0) == " ") {
+          cookie = cookie.substring(1);
+        }
+        if (cookie.indexOf(name) == 0) {
+          return JSON.parse(cookie.substring(name.length, cookie.length));
+        }
+      }
+      return null;
+    }
+    setUser(getCookie("user"));
+  }, []);
 
   interface StoreState {
     storeReducer: {
@@ -21,16 +49,51 @@ export const Search: FC<ISearch> = ({}) => {
   );
   const [isFocused, setIsFocused] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const { data, isLoading, error } = useGetSearchByNameQuery(searchTerm);
 
-  
+  const searchBook = async () => {
+    //  cripto js run
+
+    const crypto = require("crypto");
+
+    function generateMD5Sign(method: string, url: string, userSecret: string) {
+      const inputString = method + url + userSecret;
+      const hash = crypto.createHash("md5").update(inputString).digest("hex");
+      return hash;
+    }
+    const method = "POST";
+    const url = `/books/${searchTerm}`;
+    const userSecret = user?.secret;
+
+    const md5Sign = generateMD5Sign(method, url, userSecret as string);
+
+    //  tray
+
+    try {
+      const response = await search({
+        url: searchTerm,
+        key: user?.key,
+        sign: md5Sign,
+      });
+
+      if ("data" in response) {
+        console.log(85, response.data);
+      } else {
+        if (response.error) {
+          console.log(78, error);
+        }
+      }
+    } catch (error) {
+      console.log(92, error);
+    } finally {
+    }
+  };
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      setSearchTerm(searchTerm);
-      dispatch(setStoreData([data]));
-      
+      searchBook();
+      dispatch(setStoreData(data));
+      setSearchTerm("");
     }
   };
 

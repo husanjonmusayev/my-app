@@ -1,28 +1,54 @@
 import Section from "@/components/section/section";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useLayoutEffect } from "react";
-import { useGetPokemonByNameQuery } from "./api/getAllproduct";
+import { useEffect } from "react";
+import { useGetAllProductMutation } from "./api/getAllproduct";
 import { useDispatch } from "react-redux";
 import { setStoreData } from "@/context/state";
 
 export default function Home() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const crypto = require("crypto");
+  const [getAllProduct, { isLoading, error, data }] =
+    useGetAllProductMutation();
 
-  const { data } = useGetPokemonByNameQuery("/api/heroes");
+  const handleLogin = async () => {
+    //  cripto js run
 
-  useLayoutEffect(() => {
-    if (!localStorage.getItem("user")) {
-      router.push("/login");
+    function generateMD5Sign(method: string, url: string, userSecret: string) {
+      const inputString = method + url + userSecret;
+      return crypto.createHash("md5").update(inputString).digest("hex");
     }
-  }, []);
+    const method = "GET";
+    const url = "/books";
+    const userSecret = "okenVor";
+
+    const md5Sign = generateMD5Sign(method, url, userSecret as string);
+
+    //  tray
+
+    try {
+      const response = await getAllProduct({
+        key: "vorzakonKelvin",
+        sign: md5Sign,
+      });
+      if ("data" in response) {
+        dispatch(setStoreData(response.data.data));
+      } else {
+        if (response.error) {
+          console.log("malumot olishta xatolik");
+        }
+      }
+    } catch (error) {
+      console.log(78, error);
+    } finally {
+    }
+  };
 
   useEffect(() => {
-    if (data) {
-      dispatch(setStoreData(data));
-    }
-  }, [data]);
+    handleLogin();
+  }, []);
 
   return (
     <div>

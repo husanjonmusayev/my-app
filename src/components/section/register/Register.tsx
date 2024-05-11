@@ -82,8 +82,7 @@ export const Register: FC<IRegister> = () => {
         try {
           const response = await mutate(data);
           if ("data" in response) {
-            // router.push("/login");
-            console.log(response.data);
+            router.push("/login");
             setLoading(false);
           } else {
             console.error("Registration failed:", response.error);

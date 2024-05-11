@@ -7,14 +7,32 @@ import { LeftWrapper, NavbarWrap, RightWrapper } from "./navbar.s";
 interface INavbarProps {}
 
 export const Navbar: FC<INavbarProps> = ({}) => {
-  const [user, setUser] = useState<string | null>(null);
+
+  interface Superhero {
+    name: string;
+  }
+
+  const [user, setUser] = useState<Superhero | null>(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (typeof storedUser === "string") {
-      setUser(JSON.parse(storedUser));
+    function getCookie(key: string) {
+      const name = key + "=";
+      const decodedCookie = decodeURIComponent(document.cookie);
+      const cookieArr = decodedCookie.split(";");
+      for (let i = 0; i < cookieArr.length; i++) {
+        let cookie = cookieArr[i];
+        while (cookie.charAt(0) == " ") {
+          cookie = cookie.substring(1);
+        }
+        if (cookie.indexOf(name) == 0) {
+          return JSON.parse(cookie.substring(name.length, cookie.length));
+        }
+      }
+      return null;
     }
+    setUser(getCookie("user"));
   }, []);
+
   return (
     <>
       <Styles.Container>
@@ -31,7 +49,9 @@ export const Navbar: FC<INavbarProps> = ({}) => {
             <Search />
           </LeftWrapper>
           <RightWrapper>
-            <Styles.Paragrph>{user}</Styles.Paragrph>
+            <Styles.Paragrph>
+              {user !== null ? user.name : "No user found"}
+            </Styles.Paragrph>
             <Image
               src="/imgs/userImage.svg"
               alt="icon"

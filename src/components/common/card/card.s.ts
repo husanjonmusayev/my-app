@@ -9,7 +9,6 @@ export const EditDeliteWrapper = styled.div`
   transition: all 0.5s;
   cursor: pointer;
 
-
   &:hover {
     display: flex;
   }
@@ -24,7 +23,7 @@ export const Card = styled.div`
   position: relative; // Qo'shilgan qator
   background-color: white;
   width: 398px;
-  height: 414px;
+  height: 214px;
   border-radius: 12px;
   padding: 32px;
   cursor: pointer;
@@ -77,6 +76,10 @@ export const URL = styled.div`
   && a {
     text-decoration: none;
     color: #01a4ff;
+    width: max-content;
+    overflow: hidden;
+    height: 18px;
+    
   }
 `;
 

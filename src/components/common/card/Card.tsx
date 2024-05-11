@@ -12,71 +12,66 @@ import { UpdateModal } from "../updateModal";
 
 interface ICard {
   data: {
-    id: number;
-    name: string;
-    slug: string;
-    images: any;
-    sm: string;
-    appearance: any;
-    gender: string;
+    book: {
+      author: string;
+      cover: string;
+      id: number;
+      pages: number;
+      isbn: string;
+      published: number;
+      title: string;
+    };
   };
   handleFunction: (arg: any) => void;
 }
 
 export const MainCard: FC<ICard> = ({ data, handleFunction }) => {
   const [id, setId] = useState<number>(0);
-  // delite function
+ 
+
+  
 
   const handleClick = (e: number) => {
     handleFunction(e);
   };
 
-  // edite function
 
-  
+
+  // // edite function
+
   const handleUpdate = (e: number) => {
     setId(e);
-   
   };
 
   return (
     <MainCardWrapper>
       <Card>
-        <img src={data.images.sm} alt="image" />
-        <h4>{data.name}</h4>
+        <h4>{data.book.author}</h4>
         <URL>
-          <p>Cover: </p>{" "}
-          <Link href="http://url.to.book.cover">http://url.to.book.cover</Link>
+          <p>Cover: </p> <Link href={data.book.cover}>{data.book.cover}</Link>
         </URL>
-        <p>Pages: {data.slug}</p>
-
+        <p>Pages: {data.book.pages}</p>
+        <p>Pages: {data.book.published}</p>
+        <p>Pages: {data.book.isbn}</p>
         <CardFotter>
-          <p>Eben Upton / 2012</p>
-          <button
-            style={
-              data.appearance.gender === "Male"
-                ? { backgroundColor: "red" }
-                : { backgroundColor: "green" }
-            }
-          >
-            {data.appearance.gender}
-          </button>
+          <p>Eben Upton / {data.book.published}</p>
+          <button style={{ backgroundColor: "red" }}>new</button>
         </CardFotter>
       </Card>
       <EditDeliteWrapper>
         <DeliteWrapper
           onClick={() => {
-            handleClick(data.id);
+            handleClick(data.book.id);
           }}
         >
           <img src="/imgs/delite.svg" alt="delite icon" />
         </DeliteWrapper>
         <div
           onClick={() => {
-            handleUpdate(data.id);
+            handleUpdate(data.book.id);
           }}
         >
-          <UpdateModal  id={id} />
+          <UpdateModal id={id} />
         </div>
       </EditDeliteWrapper>
     </MainCardWrapper>

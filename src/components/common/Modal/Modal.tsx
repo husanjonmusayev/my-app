@@ -1,8 +1,9 @@
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { BTN, ModalFooter, ModalHeader, ModalMain } from "./modal.s";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useSenBookMutation } from "@/pages/api/sendBook";
 import { setStoreData } from "@/context/state";
 
 const style = {
@@ -20,11 +21,82 @@ const style = {
 };
 
 export default function NestedModal() {
-  const imageRef = useRef<HTMLInputElement>(null);
-  const nameRef = useRef<HTMLInputElement>(null);
-  const pagesRef = useRef<HTMLInputElement>(null);
-
+  const [user, setUser] = useState<Superhero | null>(null);
+  const isbnRef = useRef<HTMLInputElement>(null);
   const dispatch = useDispatch();
+  const [responseData, setResponseData] = useState();
+  const [senBook, { isLoading, error, data }] = useSenBookMutation();
+  interface Superhero {
+    name: string;
+    secret: string;
+    key: string;
+  }
+
+  useEffect(() => {
+    function getCookie(key: string) {
+      const name = key + "=";
+      const decodedCookie = decodeURIComponent(document.cookie);
+      const cookieArr = decodedCookie.split(";");
+      for (let i = 0; i < cookieArr.length; i++) {
+        let cookie = cookieArr[i];
+        while (cookie.charAt(0) == " ") {
+          cookie = cookie.substring(1);
+        }
+        if (cookie.indexOf(name) == 0) {
+          return JSON.parse(cookie.substring(name.length, cookie.length));
+        }
+      }
+      return null;
+    }
+    setUser(getCookie("user"));
+  }, []);
+
+  const sendBook = async () => {
+    //  cripto js run
+
+    const crypto = require("crypto");
+
+    function generateMD5Sign(
+      method: string,
+      url: string,
+      body: any,
+      userSecret: string
+    ) {
+      const inputString = method + url + JSON.stringify(body) + userSecret;
+      const hash = crypto.createHash("md5").update(inputString).digest("hex");
+      return hash;
+    }
+    const method = "POST";
+    const url = "/books";
+    const body = { isbn: isbnRef.current?.value };
+    const userSecret = user?.secret;
+
+    const md5Sign = generateMD5Sign(method, url, body, userSecret as string);
+
+    //  tray
+
+    let Isbn = { isbn: isbnRef.current?.value };
+
+    try {
+      const response = await senBook({
+        body: Isbn,
+        key: user?.key,
+        sign: md5Sign,
+      });
+
+      if ("data" in response) {
+        alert("maxsulot qo'shildi");
+      } else {
+        if (response.error) {
+          console.log(78, error);
+        }
+      }
+    } catch (error) {
+      console.log(78, error);
+    } finally {
+    }
+    // if (isbnRef) isbnRef.current?.value = "";
+  };
 
   interface Superhero {
     id: number;
@@ -82,54 +154,6 @@ export default function NestedModal() {
     (state: StoreState) => state.storeReducer
   );
 
-  // obrazes default  book
-
-  let Superhero = {
-    id: 78,
-    name: "Ben 10",
-    slug: "78-ben-10",
-    powerstats: {
-      intelligence: 10,
-      strength: 7,
-      speed: 8,
-      durability: 10,
-      power: 90,
-      combat: 80,
-    },
-    appearance: {
-      eyeColor: "-",
-      gender: "Male",
-      hairColor: "-",
-      height: ["-", "0 cm"],
-      race: null,
-      weight: ["- lb", "0 kg"],
-    },
-    biography: {
-      aliases: ["Ben Ten"],
-      alignment: "good",
-      alterEgos: "No alter egos found.",
-      firstAppearance: "Ben 10 S01E01",
-      fullName: "Benjamin Kirby Tennyson",
-      placeOfBirth: "-",
-      publisher: "DC Comics",
-      connections: {
-        groupAffiliation: "-",
-        relatives: "-",
-      },
-    },
-    images: {
-      xs: "https://cdn.rawgit.com/akabab/superhero-api/0.2.0/api/images/xs/78-ben-10.jpg",
-      sm: "https://cdn.rawgit.com/akabab/superhero-api/0.2.0/api/images/sm/78-ben-10.jpg",
-      md: "https://cdn.rawgit.com/akabab/superhero-api/0.2.0/api/images/md/78-ben-10.jpg",
-      lg: "https://cdn.rawgit.com/akabab/superhero-api/0.2.0/api/images/lg/78-ben-10.jpg",
-    },
-    work: {
-      occupation: "-",
-      base: "-",
-    },
-  };
-
-  const [createBook, setCreateBook] = useState(Superhero);
   const [open, setOpen] = useState(false);
 
   //modal open function
@@ -144,22 +168,11 @@ export default function NestedModal() {
     setOpen(false);
   };
 
-
   // Function to update the state
   function handleSubmit() {
-    const updatedBook = { ...createBook };
-    updatedBook.images.sm =
-      imageRef.current?.value ||
-      "https://media.istockphoto.com/id/1460007178/photo/library-books-on-table-and-background-for-studying-learning-and-research-in-education-school.webp?b=1&s=170667a&w=0&k=20&c=TRED57BZuROoCEP9kR85pW38PLz32onmM8106OoXeGQ=";
-    updatedBook.name = nameRef.current?.value || "Nom berilmadi";
-    updatedBook.slug = pagesRef.current?.value || "defaultSlug";
+    sendBook();
 
-    setCreateBook(updatedBook);
-
-    const updatedBookString = JSON.parse(JSON.stringify(updatedBook));
-    const updatedData = [...getData.data, updatedBookString];
-    dispatch(setStoreData(updatedData));
-    handleClose()
+    handleClose();
   }
 
   return (
@@ -175,7 +188,7 @@ export default function NestedModal() {
           sx={{
             ...style,
             width: 430,
-            height: 387,
+            height: 237,
             border: "none",
             borderRadius: "12px",
           }}
@@ -191,13 +204,8 @@ export default function NestedModal() {
             />
           </ModalHeader>
           <ModalMain>
-            <h4>book img url</h4>
-            <input ref={imageRef} type="url" />
-            <h4>book name</h4>
-            <input ref={nameRef} type="text" />
-
-            <h4>book pages</h4>
-            <input ref={pagesRef} type="text" />
+            <h4>ISBN</h4>
+            <input ref={isbnRef} type="url" />
           </ModalMain>
           <ModalFooter>
             <button onClick={handleClose}>Close</button>
