@@ -18,7 +18,6 @@ export default function Home() {
     const userData = userDataString ? JSON.parse(userDataString) : null;
 
   const getAllBook = async (userData: any) => {
-    console.log(userData);
     //  cripto js run
 
     function generateMD5Sign(method: string, url: string, userSecret: string) {
