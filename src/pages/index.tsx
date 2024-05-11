@@ -15,7 +15,7 @@ export default function Home() {
 
   const userDataString =
     typeof window !== "undefined" ? localStorage.getItem("user") : null;
-  const userData = userDataString ? JSON.parse(userDataString) : null;
+    const userData = userDataString ? JSON.parse(userDataString) : null;
 
   const getAllBook = async (userData: any) => {
     console.log(userData);
