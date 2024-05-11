@@ -76,6 +76,7 @@ export const Search: FC<ISearch> = ({}) => {
       });
 
       if ("data" in response) {
+        console.log(response.data.data)
         if (!response.data.data.legth) {
           alert("bunday kitob mavjud emas");
         }
