@@ -3,7 +3,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useGetAllProductMutation } from "./api/getAllproduct";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setStoreData } from "@/context/state";
 
 export default function Home() {
@@ -13,9 +13,19 @@ export default function Home() {
   const [getAllProduct, { isLoading, error, data }] =
     useGetAllProductMutation();
 
+  interface StoreState {
+    storeReducer: {
+      data: string[];
+    };
+  }
+
+  const getData: { data: string[] } = useSelector(
+    (state: StoreState) => state.storeReducer
+  );
+
   const userDataString =
     typeof window !== "undefined" ? localStorage.getItem("user") : null;
-    const userData = userDataString ? JSON.parse(userDataString) : null;
+  const userData = userDataString ? JSON.parse(userDataString) : null;
 
   const getAllBook = async (userData: any) => {
     //  cripto js run
@@ -56,7 +66,7 @@ export default function Home() {
     } else {
       getAllBook(userData);
     }
-  }, []);
+  }, [getData.data]);
 
   return (
     <div>

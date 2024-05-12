@@ -85,7 +85,6 @@ export default function NestedModal() {
       });
 
       if ("data" in response) {
-        console.log(response.data.data);
         alert("maxsulot qo'shildi");
       } else {
         if (response.error) {
@@ -96,7 +95,6 @@ export default function NestedModal() {
       console.log(78, error);
     } finally {
     }
-    // if (isbnRef) isbnRef.current?.value = "";
   };
 
   interface Superhero {
