@@ -1,9 +1,9 @@
 import Section from "@/components/section/section";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useGetAllProductMutation } from "./api/getAllproduct";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setStoreData } from "@/context/state";
 
 export default function Home() {
