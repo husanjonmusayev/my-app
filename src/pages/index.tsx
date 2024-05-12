@@ -13,16 +13,6 @@ export default function Home() {
   const [getAllProduct, { isLoading, error, data }] =
     useGetAllProductMutation();
 
-  interface StoreState {
-    storeReducer: {
-      data: string[];
-    };
-  }
-
-  const getData: { data: string[] } = useSelector(
-    (state: StoreState) => state.storeReducer
-  );
-
   const userDataString =
     typeof window !== "undefined" ? localStorage.getItem("user") : null;
   const userData = userDataString ? JSON.parse(userDataString) : null;
@@ -66,7 +56,7 @@ export default function Home() {
     } else {
       getAllBook(userData);
     }
-  }, [getData.data]);
+  }, []);
 
   return (
     <div>

@@ -94,13 +94,16 @@ export const Search: FC<ISearch> = ({}) => {
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      const originalData = getData.data;
-
-      const filteredData = originalData.filter((el: any) => {
-        return el.book.author.toLowerCase().includes(searchTerm.toLowerCase());
-      });
-
-      dispatch(setStoreData(filteredData));
+      // searchBook();
+      dispatch(
+        setStoreData(
+          getData.data.filter((el: any) => {
+            return el.book.author
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase());
+          })
+        )
+      );
       setSearchTerm("");
     }
   };
