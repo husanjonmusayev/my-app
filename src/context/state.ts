@@ -18,6 +18,5 @@ const storeSlice = createSlice({
   },
 });
 
-// Destructure and export action creators individually
 export const { setStoreData } = storeSlice.actions;
-export default storeSlice.reducer; // Export the reducer
+export default storeSlice.reducer; 
